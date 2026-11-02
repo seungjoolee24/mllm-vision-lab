@@ -20,10 +20,10 @@ cell("markdown", """
     데스크탑과 노트북에서 같은 Google/GitHub 계정으로 이 노트북을 열면 됩니다.
 
     1. **런타임 → 런타임 유형 변경 → GPU**를 선택하세요.
-    2. 비공개 저장소는 Colab의 GitHub 열기 화면에서 **Include private repos**를 켜서 여세요.
-    3. 왼쪽 **Secrets(열쇠)**에 `GITHUB_TOKEN`을 추가하세요. 이 저장소의 **Contents: Read-only** 권한인
-       fine-grained GitHub token이면 clone에 충분합니다. 노트북 접근을 허용하세요.
-       Colab에서 노트북을 여는 권한과 런타임의 `git clone` 인증은 별개입니다.
+    2. 현재 공개 저장소는 GitHub 인증이나 토큰 없이 바로 열고 clone할 수 있습니다.
+    3. 나중에 비공개로 바꿀 때만 `REPO_IS_PRIVATE=True`로 바꾸고, **Secrets(열쇠)**에 `GITHUB_TOKEN`을 추가하세요.
+       이 저장소의 **Contents: Read-only** 권한인 fine-grained token이면 clone에 충분합니다.
+       비공개 노트북을 여는 Colab OAuth와 런타임의 `git clone` 인증은 별개입니다.
     4. 우선 기본값 `smoke.json`을 실행하세요. 2문항·64 출력 토큰의 인프라 확인이며 연구 점수가 아닙니다.
     5. 확인 후 `pilot52.json` 또는 `full388.json`과 **새 RUN_ID**를 사용하세요.
 
@@ -33,6 +33,7 @@ cell("markdown", """
 cell("code", '''
     # 실행 설정: 재개할 때 RUN_ID, CONFIG, CODE_REF를 그대로 유지하세요.
     REPO_SLUG = "seungjoolee24/mllm-vision-lab" #@param {type:"string"}
+    REPO_IS_PRIVATE = False #@param {type:"boolean"}
     CODE_REF = "main" # main 또는 고정된 40자리 Git commit SHA
     CONFIG = "configs/smoke.json" #@param ["configs/smoke.json", "configs/pilot52.json", "configs/full388.json"]
     RUN_ID = "smoke-v1" #@param {type:"string"}
@@ -41,7 +42,7 @@ cell("code", '''
 ''')
 cell("markdown", """
     ## 1. GitHub 코드 받기
-    토큰은 Colab Secrets 또는 숨김 입력으로만 사용합니다. URL·파일·출력에 저장하지 않습니다.
+    공개 저장소는 토큰을 요구하지 않습니다. 비공개 옵션의 토큰은 Secrets 또는 숨김 입력으로만 사용합니다.
     기존 checkout에 수정 내용이 있으면 자동 덮어쓰기를 중단합니다.
 """)
 cell("code", '''
@@ -52,10 +53,12 @@ cell("code", '''
     assert re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", REPO_SLUG)
     assert CODE_REF == "main" or re.fullmatch(r"[0-9a-f]{40}", CODE_REF)
     REPO = Path("/content/mllm-vision-lab")
-    try:
-        token = userdata.get("GITHUB_TOKEN")
-    except Exception:
-        token = getpass.getpass("GitHub read-only token (hidden; public repo can be blank): ")
+    token = None
+    if REPO_IS_PRIVATE:
+        try:
+            token = userdata.get("GITHUB_TOKEN")
+        except Exception:
+            token = getpass.getpass("GitHub read-only token (hidden): ")
     try:
         with tempfile.TemporaryDirectory(prefix="visionlab-git-") as temporary:
             askpass = Path(temporary) / "askpass.py"

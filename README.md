@@ -13,14 +13,14 @@ BabyVision의 세밀한 시각 문제를 Qwen3-VL로 진단하는 개인 연구 
 
 ## 첫 실행
 
-1. 위 **Open in Colab**을 여세요. 비공개 저장소라면 [Colab GitHub 열기](https://colab.research.google.com/github)에서 **Include private repos**를 허용하세요.
+1. 위 **Open in Colab**을 여세요. 현재 공개 저장소이므로 GitHub 인증이나 토큰 없이 열고 코드를 받을 수 있습니다.
 2. Colab 런타임을 GPU로 바꾸세요. 우선 기본 `configs/smoke.json`, `RUN_ID="smoke-v1"`을 사용하세요.
-3. [GitHub fine-grained token 생성](https://github.com/settings/personal-access-tokens/new)에서 **Only selected repositories → mllm-vision-lab**, **Repository permissions → Contents: Read-only**, 필요한 유효기간을 설정하세요. Colab Secrets(열쇠)에 `GITHUB_TOKEN`으로 저장하고 이 노트북의 접근을 허용하세요. 노트북을 여는 Colab OAuth와 런타임의 git clone 인증은 별개입니다. 토큰을 코드나 채팅에 붙여 넣지 마세요.
+3. 공개 저장소에서는 `REPO_IS_PRIVATE=False`를 유지하세요. **나중에 비공개로 바꿀 때만** [Colab GitHub 열기](https://colab.research.google.com/github)에서 Include private repos를 허용하고 `REPO_IS_PRIVATE=True`를 사용하세요. 비공개 런타임 clone은 [fine-grained token](https://github.com/settings/personal-access-tokens/new)의 Only selected repositories → 이 저장소, Contents: Read-only를 지정해 Colab Secrets의 `GITHUB_TOKEN`으로 저장하면 됩니다. 토큰은 코드나 채팅에 붙여 넣지 마세요.
 4. 셀을 위에서 순서대로 실행하고, 본인 Google Drive 마운트를 허용하세요.
 5. GPU 정보, 2문항의 양쪽 입력 결과, 보고서 저장 위치를 확인하세요. 이 smoke는 출력 상한 64토큰으로 **설치·실행 확인용**입니다.
 6. 연구 실행은 `configs/pilot52.json` 또는 `configs/full388.json`과 새 RUN_ID를 선택하세요. 이 두 설정의 출력 상한은 512토큰입니다.
 
-Google 계정 권한 승인과 GitHub 비공개 저장소 접근은 처음에 사용자 본인이 해야 합니다. Colab의 유료 GPU 선택·구독은 이 코드가 자동으로 구매하지 않습니다.
+Google 계정 로그인과 Drive 권한 승인은 처음에 사용자 본인이 해야 합니다. 공개 저장소를 읽는 데에는 GitHub 로그인이 필요 없습니다. Colab의 유료 GPU 선택·구독은 이 코드가 자동으로 구매하지 않습니다.
 
 ## 설정
 
@@ -36,7 +36,7 @@ pilot/full에서 BF16을 지원하지 않는 GPU가 배정되면 명시적으로
 
 ## 다른 PC에서 재개
 
-1. 같은 GitHub 계정으로 같은 노트북을 여세요. Drive는 기존 결과가 있는 **같은 Google 계정**으로 연결하세요.
+1. 같은 공개 GitHub 노트북을 여세요. Drive는 기존 결과가 있는 **같은 Google 계정**으로 연결하세요.
 2. 기존 런타임을 먼저 중지하세요. 같은 RUN_ID를 두 런타임에서 동시에 실행하지 마세요.
 3. 기존 RUN_ID, CONFIG, 정밀도를 유지하세요. `manifest.json`의 `code.git_commit` 값을 `CODE_REF`에 넣으면 같은 코드를 선택할 수 있습니다.
 4. 같은 실행 셀을 실행하세요. 저장된 배치 계획과 완료 배치를 읽고 이어갑니다. 중단된 현재 배치만 다시 실행될 수 있습니다.
