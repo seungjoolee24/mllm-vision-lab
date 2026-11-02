@@ -1,0 +1,30 @@
+{
+  "model_id": "Qwen/Qwen3-VL-2B-Instruct",
+  "model_revision": "89644892e4d85e24eaac8bacfd4f463576704203",
+  "dtype": "auto",
+  "batch_size": 2,
+  "seed": 42,
+  "min_visual_tokens": 64,
+  "max_visual_tokens": 1024,
+  "max_new_tokens": 64,
+  "allocator_fraction": 0.9,
+  "sampling": {
+    "do_sample": true,
+    "temperature": 0.7,
+    "top_p": 0.8,
+    "top_k": 20,
+    "repetition_penalty": 1.0
+  },
+  "prompt_suffix": "\nGive only your final answer in \\boxed{Answer} format. Do not include reasoning or an explanation.",
+  "conditions": [
+    {
+      "name": "baseline",
+      "spatial_scale": 1.0
+    },
+    {
+      "name": "dense",
+      "spatial_scale": 1.4142135623730951
+    }
+  ],
+  "selection": "manifests/smoke2.json"
+}

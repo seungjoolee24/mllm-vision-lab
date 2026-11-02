@@ -1,0 +1,7 @@
+{
+  "description": "Infrastructure smoke only: 64 output tokens. Not a research accuracy estimate.",
+  "task_ids": [
+    6557,
+    6455
+  ]
+}

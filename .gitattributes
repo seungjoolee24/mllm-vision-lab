@@ -1,0 +1,10 @@
+* text=auto eol=lf
+*.py text eol=lf
+*.json text eol=lf
+*.ipynb text eol=lf
+*.sh text eol=lf
+*.ps1 text eol=crlf
+*.jpg binary
+*.png binary
+# Historical model outputs contain intentional trailing spaces; preserve them.
+history/** -whitespace
